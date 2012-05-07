@@ -35,19 +35,7 @@
     <div class="plot"></div>
   </section>
   <output></output>
-  <output class="source"></output>
-  <footer>
-    <nav><ul><li><a href="index.html">Start</a></li><li><a href="windowevents.html" id="" title="windowevents">Events</a></li>
-    <li><a href="eventproperties.html">Event Properties</a></li>
-    <li><a href="preventdefault.html">Prevent default</a></li>
-    <li><a href="mouseposition.html">Mouse position</a></li>
-    <li><a href="transitionevent.html">Transitions</a></li>
-    <li><strong>Speed, Distance and Angle</strong></li></ul></nav>
-  <p class="small">Written by 
-    <a href="http://christianheilmann.com/">Chris Heilmann</a> 
-    (<a href="http://twitter.com/codepo8">@codepo8</a>)
-  </p>
-</footer>
+
 <script>
 var plot = document.querySelector('.plot'),
     log = document.querySelector('output'),
@@ -98,11 +86,19 @@ function moveplot(x, y) {
   plot.style.top = (y - offset) + 'px';
 }
 </script>
-<script>
-var code = document.querySelector('script').innerHTML;
-code = code.replace(/</g,'&lt');
-code = code.replace(/>/g,'&gt');
-document.querySelector('.source').innerHTML = code;
-</script>
+
+
+  <footer>
+    <nav><ul><li><a href="index.html">Start</a></li><li><a href="windowevents.html" id="" title="windowevents">Events</a></li>
+    <li><a href="eventproperties.html">Event Properties</a></li>
+    <li><a href="preventdefault.html">Prevent default</a></li>
+    <li><a href="mouseposition.html">Mouse position</a></li>
+    <li><a href="transitionevent.html">Transitions</a></li>
+    <li><strong>Speed, Distance and Angle</strong></li></ul></nav>
+  <p class="small">Written by 
+    <a href="http://christianheilmann.com/">Chris Heilmann</a> 
+    (<a href="http://twitter.com/codepo8">@codepo8</a>)
+  </p>
+</footer>
 </body>
 </html>

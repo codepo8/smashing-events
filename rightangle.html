@@ -35,14 +35,6 @@
         <li>Angle: Math.atan2( y1-y, x1-x ) * 180 / Math.PI: <span id="angle"></span></li>
       </ul>
     </output>
-    <output class="source"></output>
-  </section>
-  <footer>
-  <p>Written by 
-    <a href="http://christianheilmann.com/">Chris Heilmann</a> 
-    (<a href="http://twitter.com/codepo8">@codepo8</a>)
-  </p>
-</footer>
 <script>
 var canvas = document.querySelector('canvas'),
     cx = canvas.getContext('2d'),
@@ -53,70 +45,68 @@ var canvas = document.querySelector('canvas'),
       horizontal: document.querySelector('#hd')
     },
     mx = my = angle = x = y = dist = grd = 0;
-    canvas.height = canvas.width = w = h = 400;
-    canvas.addEventListener('mousemove', function(ev) {
-      x = ev.pageX - this.offsetLeft; 
-      y = ev.pageY - this.offsetTop;
-      canvas.width = 400;
-      
-      cx.beginPath();
-      cx.moveTo(200, 200);
-      cx.strokeStyle = 'red';
-      cx.lineTo(x, y);
-      cx.stroke();
-      cx.closePath();
 
-      cx.beginPath();
-      cx.strokeStyle = 'blue';
-      cx.moveTo(x, y);
-      cx.lineTo(x, 200);
-      cx.stroke();
-      cx.closePath();
+canvas.height = canvas.width = w = h = 400;
+canvas.addEventListener('mousemove', function(ev) {
+  x = ev.pageX - this.offsetLeft; 
+  y = ev.pageY - this.offsetTop;
+  canvas.width = 400;
 
-      cx.beginPath();
-      cx.strokeStyle = 'green';
-      cx.moveTo(x, 200);
-      cx.lineTo(200, 200);
-      cx.stroke();
-      cx.closePath();
-      
-      cx.beginPath();
-      grd = cx.createRadialGradient(x,y,3,x,y,10);
-      grd.addColorStop(0, "white");
-      grd.addColorStop(1, "orange");
-      cx.fillStyle = grd;  
-      cx.arc( x, y, 10 , 0, Math.PI*2, true );
-      cx.fill();      
-      cx.closePath();
+  cx.beginPath();
+  cx.moveTo(200, 200);
+  cx.strokeStyle = 'red';
+  cx.lineTo(x, y);
+  cx.stroke();
+  cx.closePath();
 
-      cx.beginPath();
-      grd = cx.createRadialGradient(200,200,3,200,200,10);
-      grd.addColorStop(0, "white");
-      grd.addColorStop(1, "red");
-      cx.fillStyle = grd;  
-      cx.arc( 200, 200, 10 , 0, Math.PI*2, true );
-      cx.fill();      
-      cx.closePath();
-      
-      
-      mx = x - 200;
-      my = y - 200;
-      dist = Math.sqrt(mx * mx + my * my);
-      angle = Math.atan2( my, mx ) * 180 / Math.PI;
-      output.horizontal.innerHTML = Math.abs(mx);
-      output.vertical.innerHTML = Math.abs(my);
-      output.length.innerHTML = ((dist*100)>>0)/100;
-      output.angle.innerHTML = ((angle*100)>>0)/100;
+  cx.beginPath();
+  cx.strokeStyle = 'blue';
+  cx.moveTo(x, y);
+  cx.lineTo(x, 200);
+  cx.stroke();
+  cx.closePath();
 
-    }, false);
+  cx.beginPath();
+  cx.strokeStyle = 'green';
+  cx.moveTo(x, 200);
+  cx.lineTo(200, 200);
+  cx.stroke();
+  cx.closePath();
 
+  cx.beginPath();
+  grd = cx.createRadialGradient(x,y,3,x,y,10);
+  grd.addColorStop(0, "white");
+  grd.addColorStop(1, "orange");
+  cx.fillStyle = grd;  
+  cx.arc( x, y, 10 , 0, Math.PI*2, true );
+  cx.fill();      
+  cx.closePath();
+
+  cx.beginPath();
+  grd = cx.createRadialGradient(200,200,3,200,200,10);
+  grd.addColorStop(0, "white");
+  grd.addColorStop(1, "red");
+  cx.fillStyle = grd;  
+  cx.arc( 200, 200, 10 , 0, Math.PI*2, true );
+  cx.fill();      
+  cx.closePath();
+  mx = x - 200;
+  my = y - 200;
+  dist = Math.sqrt(mx * mx + my * my);
+  angle = Math.atan2( my, mx ) * 180 / Math.PI;
+  output.horizontal.innerHTML = Math.abs(mx);
+  output.vertical.innerHTML = Math.abs(my);
+  output.length.innerHTML = ((dist*100)>>0)/100;
+  output.angle.innerHTML = ((angle*100)>>0)/100;
+
+}, false);
 </script>
-<script>
-var code = document.querySelector('script').innerHTML;
-code = code.replace(/</g,'&lt');
-code = code.replace(/>/g,'&gt');
-document.querySelector('.source').innerHTML = code;
-</script>
-
+  </section>
+  <footer>
+  <p>Written by 
+    <a href="http://christianheilmann.com/">Chris Heilmann</a> 
+    (<a href="http://twitter.com/codepo8">@codepo8</a>)
+  </p>
+</footer>
 </body>
 </html>

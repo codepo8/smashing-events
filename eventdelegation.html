@@ -48,13 +48,6 @@
     </div>
   </section>
   <output id="log"></output>
-  <output class="source"></output>
-  <footer>
-  <p class="small">Written by 
-    <a href="http://christianheilmann.com/">Chris Heilmann</a> 
-    (<a href="http://twitter.com/codepo8">@codepo8</a>)
-  </p>
-</footer>
 <script>
 var resources = document.querySelector('#resources'),
     log = document.querySelector('#log');
@@ -74,11 +67,12 @@ function showtarget(ev) {
   }
 }
 </script>
-<script>
-var code = document.querySelector('script').innerHTML;
-code = code.replace(/</g,'&lt');
-code = code.replace(/>/g,'&gt');
-document.querySelector('.source').innerHTML = code;
-</script>
+
+  <footer>
+  <p class="small">Written by 
+    <a href="http://christianheilmann.com/">Chris Heilmann</a> 
+    (<a href="http://twitter.com/codepo8">@codepo8</a>)
+  </p>
+</footer>
 </body>
 </html>

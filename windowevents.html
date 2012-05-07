@@ -18,9 +18,18 @@
   <header><h1 class="large">Events detected in your browser</h1></header>
   <section>
     <output id="log"></output>
-    <output class="source"></output>
   </section>
-  <footer>
+
+<script>
+var log = document.getElementById('log'),
+    i = null, 
+    out = [];
+for (var i in window) {
+  if ( /^on/.test(i) ) { out[out.length] = i; }
+}
+log.innerHTML = out.join(', ');
+</script>
+    <footer>
     <nav><ul><li><a href="index.html">Start</a></li><li><strong>Events</strong></li>
     <li><a href="eventproperties.html">Event Properties</a></li>
     <li><a href="preventdefault.html">Prevent default</a></li>
@@ -32,21 +41,5 @@
     (<a href="http://twitter.com/codepo8">@codepo8</a>)
   </p>
 </footer>
-<script>
-var log = document.getElementById('log'),
-    i = null, 
-    out = [];
-for (var i in window) {
-  if ( /^on/.test(i) ) { out[out.length] = i; }
-}
-log.innerHTML = out.join(', ');
-</script>
-
-<script>
-var code = document.querySelector('script').innerHTML;
-code = code.replace(/</g,'&lt');
-code = code.replace(/>/g,'&gt');
-document.querySelector('.source').innerHTML = code;
-</script>
 </body>
 </html>

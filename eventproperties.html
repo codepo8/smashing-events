@@ -19,8 +19,28 @@
   <header><h1 class="large">Click anywhere or press a key</h1></header>
   <section>
     <output id="log"></output>
-    <output class="source"></output>
   </section>
+  <script>
+  var log = document.getElementById('log'),
+      i = 0,
+      out = '';
+
+  document.addEventListener('click', logeventinfo, false);
+  document.addEventListener('keypress', logeventinfo, false);
+
+  function logeventinfo (ev) {
+    log.innerHTML = '';
+    out = '<ul>';
+    for (var i in ev) {
+      if (typeof ev[i] === 'function' || i === i.toUpperCase()) {
+        continue;
+      }
+      out += '<li><span>'+i+'</span>: '+ev[i]+'</li>';
+    }
+    log.innerHTML += out + '</ul>';
+  }
+  </script>
+
   <footer>
     <nav><ul><li><a href="index.html">Start</a></li><li><a href="windowevents.html">Events</a></li>
     <li><strong>Event Properties</strong></li>
@@ -33,33 +53,5 @@
     (<a href="http://twitter.com/codepo8">@codepo8</a>)
   </p>
 </footer>
-<script>
-var log = document.getElementById('log'),
-    i = 0,
-    out = '';
-    
-document.addEventListener('click', logeventinfo, false);
-document.addEventListener('keypress', logeventinfo, false);
-
-function logeventinfo (ev) {
-  log.innerHTML = '';
-  out = '<ul>';
-  for (var i in ev) {
-    if (typeof ev[i] === 'function' || i === i.toUpperCase()) {
-      continue;
-    }
-    out += '<li><span>'+i+'</span>: '+ev[i]+'</li>';
-  }
-  log.innerHTML += out + '</ul>';
-}
-</script>
-<script>
-var code = document.querySelector('script').innerHTML;
-    code = code.replace(/</g,'&lt');
-    code = code.replace(/>/g,'&gt');
-  document.querySelector('.source').innerHTML = code;
-  
-</script>
-
 </body>
 </html>

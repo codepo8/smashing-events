@@ -40,19 +40,6 @@
     <div class="plot"></div>
   </section>
   <output></output>
-  <output class="source"></output>
-  <footer>
-    <nav><ul><li><a href="index.html">Start</a></li><li><a href="windowevents.html" id="" title="windowevents">Events</a></li>
-    <li><a href="eventproperties.html">Event Properties</a></li>
-    <li><a href="preventdefault.html">Prevent default</a></li>
-    <li><a href="mouseposition.html">Mouse position</a></li>
-    <li><strong>Transitions</strong></li>
-    <li><a href="speeddistanceangle.html">Speed, Distance and Angle</a></li></ul></nav>
-  <p class="small">Written by 
-    <a href="http://christianheilmann.com/">Chris Heilmann</a> 
-    (<a href="http://twitter.com/codepo8">@codepo8</a>)
-  </p>
-</footer>
 <script>
 var plot = document.querySelector('.plot'),
     log = document.querySelector('output'),
@@ -67,11 +54,18 @@ plot.addEventListener(transition, function(ev) {
   log.innerHTML += ev.propertyName + ':' + ev.elapsedTime + 's ';
 }, false);
 </script>
-<script>
-var code = document.querySelector('script').innerHTML;
-code = code.replace(/</g,'&lt');
-code = code.replace(/>/g,'&gt');
-document.querySelector('.source').innerHTML = code;
-</script>
+
+  <footer>
+    <nav><ul><li><a href="index.html">Start</a></li><li><a href="windowevents.html" id="" title="windowevents">Events</a></li>
+    <li><a href="eventproperties.html">Event Properties</a></li>
+    <li><a href="preventdefault.html">Prevent default</a></li>
+    <li><a href="mouseposition.html">Mouse position</a></li>
+    <li><strong>Transitions</strong></li>
+    <li><a href="speeddistanceangle.html">Speed, Distance and Angle</a></li></ul></nav>
+  <p class="small">Written by 
+    <a href="http://christianheilmann.com/">Chris Heilmann</a> 
+    (<a href="http://twitter.com/codepo8">@codepo8</a>)
+  </p>
+</footer>
 </body>
 </html>

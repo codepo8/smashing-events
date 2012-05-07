@@ -25,19 +25,6 @@
     <a class="normal" href="http://smashingmagazine.com">Smashing, my dear!</a></p>
     </div>
   </section>
-  <output class="source"></output>
-  <footer>
-    <nav><ul><li><a href="index.html">Start</a></li><li><a href="windowevents.html">Events</a></li>
-    <li><a href="eventproperties.html">Event Properties</a></li>
-    <li><strong>Prevent default</strong></li>
-    <li><a href="mouseposition.html">Mouse position</a></li>
-    <li><a href="transitionevent.html">Transitions</a></li>
-    <li><a href="speeddistanceangle.html">Speed, Distance and Angle</a></li></ul></nav>
-  <p class="small">Written by 
-    <a href="http://christianheilmann.com/">Chris Heilmann</a> 
-    (<a href="http://twitter.com/codepo8">@codepo8</a>)
-  </p>
-</footer>
 <script>
 var normal = document.querySelector('.normal'),
     prevent = document.querySelector('.prevent');
@@ -51,9 +38,17 @@ normal.addEventListener('click', function(ev) {
   alert('fabulous, really!');
 }, false);
 </script>
-<script>
-  document.querySelector('.source').innerHTML = document.querySelector('script').innerHTML;
-  
-</script>
+  <footer>
+    <nav><ul><li><a href="index.html">Start</a></li><li><a href="windowevents.html">Events</a></li>
+    <li><a href="eventproperties.html">Event Properties</a></li>
+    <li><strong>Prevent default</strong></li>
+    <li><a href="mouseposition.html">Mouse position</a></li>
+    <li><a href="transitionevent.html">Transitions</a></li>
+    <li><a href="speeddistanceangle.html">Speed, Distance and Angle</a></li></ul></nav>
+  <p class="small">Written by 
+    <a href="http://christianheilmann.com/">Chris Heilmann</a> 
+    (<a href="http://twitter.com/codepo8">@codepo8</a>)
+  </p>
+</footer>
 </body>
 </html>

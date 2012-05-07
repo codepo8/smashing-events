@@ -19,13 +19,6 @@ pre {
   padding: 10px;
 }
 output span {color: #030;font-weight:bold}
-.source {
-  white-space: pre;
-  text-shadow:none;
-  background: #333;
-  color: #fff;
-  font-family: monaco, courier, monospace;
-}
 footer nav li {
   display: inline;
   list-style: none;
@@ -37,6 +30,19 @@ footer ul {
 footer a:hover, footer nav strong {
   background: #333;
   text-decoration: none;
+}
+script {
+  display: block;
+  white-space: pre;
+  text-shadow:none;
+  background: #333;
+  color: #fff;
+  font-family: monaco, courier, monospace;
+  padding: 10px;
+}
+script::before{
+  content: 'Source:';
+  color: #0f0;
 }
 footer{
   margin-top:50px;

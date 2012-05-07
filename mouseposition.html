@@ -39,20 +39,7 @@
     <p><input type="checkbox" id="smooth"><label for="smooth">Smooth motion</label></p>
   </section>
   <div class="plot"></div>
-  <output class="source"></output>
-  <footer>
-    <nav><ul><li><a href="index.html">Start</a></li><li><a href="windowevents.html" id="" title="windowevents">Events</a></li>
-    <li><a href="eventproperties.html">Event Properties</a></li>
-    <li><a href="preventdefault.html">Prevent default</a></li>
-    <li><strong>Mouse position</strong></li>
-    <!-- <li><a href="mouseposition.html">Mouse position</a></li> -->
-    <li><a href="transitionevent.html">Transitions</a></li>
-    <li><a href="speeddistanceangle.html">Speed, Distance and Angle</a></li></ul></nav>
-  <p class="small">Written by 
-    <a href="http://christianheilmann.com/">Chris Heilmann</a> 
-    (<a href="http://twitter.com/codepo8">@codepo8</a>)
-  </p>
-</footer>
+
 <script>
 var plot = document.querySelector('.plot'),
     cb = document.querySelector('input[type=checkbox]'),
@@ -66,11 +53,20 @@ cb.addEventListener('click', function(ev) {
 }, false);
 
 </script>
-<script>
-var code = document.querySelector('script').innerHTML;
-code = code.replace(/</g,'&lt');
-code = code.replace(/>/g,'&gt');
-document.querySelector('.source').innerHTML = code;
-</script>
+
+
+  <footer>
+    <nav><ul><li><a href="index.html">Start</a></li><li><a href="windowevents.html" id="" title="windowevents">Events</a></li>
+    <li><a href="eventproperties.html">Event Properties</a></li>
+    <li><a href="preventdefault.html">Prevent default</a></li>
+    <li><strong>Mouse position</strong></li>
+    <!-- <li><a href="mouseposition.html">Mouse position</a></li> -->
+    <li><a href="transitionevent.html">Transitions</a></li>
+    <li><a href="speeddistanceangle.html">Speed, Distance and Angle</a></li></ul></nav>
+  <p class="small">Written by 
+    <a href="http://christianheilmann.com/">Chris Heilmann</a> 
+    (<a href="http://twitter.com/codepo8">@codepo8</a>)
+  </p>
+</footer>
 </body>
 </html>
