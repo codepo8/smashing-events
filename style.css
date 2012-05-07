@@ -1,0 +1,49 @@
+body {
+  font-family: "Open Sans", helvetica, arial, sans-serif;
+  padding-bottom: 0;
+}
+h1,h2,h3,h4{ font-weight: normal;}
+a {color: #060}
+output, .demo {
+  padding:10px;
+  display: block;
+background:#d7d5d5;border-color:#bcb9b9;text-shadow:0 1px #fff;-webkit-box-shadow:0 1px 1px rgba(255,255,255,0.75),0 1px 3px rgba(0,0,0,0.1) inset;-moz-box-shadow:0 1px 1px rgba(255,255,255,0.75),0 1px 3px rgba(0,0,0,0.1) inset;box-shadow:0 1px 1px rgba(255,255,255,0.75),0 1px 3px rgba(0,0,0,0.1) inset;
+margin: 20px 0}
+ul {
+  margin-left: 2em;
+}
+li, p {
+  margin-bottom: 1em;
+}
+pre {
+  padding: 10px;
+}
+output span {color: #030;font-weight:bold}
+.source {
+  white-space: pre;
+  text-shadow:none;
+  background: #333;
+  color: #fff;
+  font-family: monaco, courier, monospace;
+}
+footer nav li {
+  display: inline;
+  list-style: none;
+  padding-right: 5px;
+}
+footer ul {
+  margin: 0 0 10px 0;
+}
+footer a:hover, footer nav strong {
+  background: #333;
+  text-decoration: none;
+}
+footer{
+  margin-top:50px;
+  color: #f8f8f8;
+  background: #181818;
+  padding:10px 10px 50px 10px;
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
+}
+footer a, footer strong {border-radius:3px;color: #fff;padding:5px;-moz-transition:1s;-webkit-transition: 1s;-o-transition:1s;-ms-transition:1s;transition:1s;font-weight:normal}
