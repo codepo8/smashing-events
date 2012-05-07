@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Event detection and property display</title>
+  <meta type="description" content="">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700|Open+Sans+Condensed:700,300' rel='stylesheet' type='text/css'>
+	<!--[if lt IE 9]>
+		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link rel="stylesheet" media="all" href="less.css"/>
+	<link rel="stylesheet" media="all" href="style.css"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+	<!-- Adding "maximum-scale=1" fixes the Mobile Safari auto-zoom bug: http://filamentgroup.com/examples/iosScaleBug/ -->
+</style>
+</head>
+<body>
+  <header><h1 class="large">Click anywhere or press a key</h1></header>
+  <section>
+    <output id="log"></output>
+    <output class="source"></output>
+  </section>
+  <footer>
+    <nav><ul><li><a href="index.html">Start</a></li><li><a href="windowevents.html">Events</a></li>
+    <li><strong>Event Properties</strong></li>
+    <li><a href="preventdefault.html">Prevent default</a></li>
+    <li><a href="mouseposition.html">Mouse position</a></li>
+    <li><a href="transitionevent.html">Transitions</a></li>
+    <li><a href="speeddistanceangle.html">Speed, Distance and Angle</a></li></ul></nav>
+  <p class="small">Written by 
+    <a href="http://christianheilmann.com/">Chris Heilmann</a> 
+    (<a href="http://twitter.com/codepo8">@codepo8</a>)
+  </p>
+</footer>
+<script>
+var log = document.getElementById('log'),
+    i = 0,
+    out = '';
+    
+document.addEventListener('click', logeventinfo, false);
+document.addEventListener('keypress', logeventinfo, false);
+
+function logeventinfo (ev) {
+  log.innerHTML = '';
+  out = '<ul>';
+  for (var i in ev) {
+    if (typeof ev[i] === 'function' || i === i.toUpperCase()) {
+      continue;
+    }
+    out += '<li><span>'+i+'</span>: '+ev[i]+'</li>';
+  }
+  log.innerHTML += out + '</ul>';
+}
+</script>
+<script>
+var code = document.querySelector('script').innerHTML;
+    code = code.replace(/</g,'&lt');
+    code = code.replace(/>/g,'&gt');
+  document.querySelector('.source').innerHTML = code;
+  
+</script>
+
+</body>
+</html>

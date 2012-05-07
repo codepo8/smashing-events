@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculating distance and angle between two points</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700|Open+Sans+Condensed:700,300' rel='stylesheet' type='text/css'>
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" media="all" href="less.css"/>
+  <link rel="stylesheet" media="all" href="style.css"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+<style>
+  canvas{
+  background: #ccc;
+  float:left;
+  margin:0 10px 10px 0;
+  }
+  output{display:block;float:right;min-width:450px}
+  output ul{margin:0}
+  output li{list-style:none}
+  .source {clear:both;margin-top:50px;float:none}
+</style>
+</head>
+<body>
+  <header><h1 class="large">Calculating distance and angle between two points</h1></header>
+  <section>
+    <canvas></canvas>
+    <output>
+      <ul>
+        <li>Horizontal distance <span style="color:green">(x1 - x)</span>: <span id="hd"></span></li>
+        <li>Vertical distance <span style="color:blue">(y1 - y)</span>: <span id="vd"></span></li>
+        <li>Length <span style="color:red">Math.sqrt((x1-x) * (x1-x) + (y1-y) * (y1-y))</span>: <span id="length"></span> </li>
+        <li>Angle: Math.atan2( y1-y, x1-x ) * 180 / Math.PI: <span id="angle"></span></li>
+      </ul>
+    </output>
+    <output class="source"></output>
+  </section>
+  <footer>
+  <p>Written by 
+    <a href="http://christianheilmann.com/">Chris Heilmann</a> 
+    (<a href="http://twitter.com/codepo8">@codepo8</a>)
+  </p>
+</footer>
+<script>
+var canvas = document.querySelector('canvas'),
+    cx = canvas.getContext('2d'),
+    output = {
+      angle: document.querySelector('#angle'),
+      length: document.querySelector('#length'),
+      vertical: document.querySelector('#vd'),
+      horizontal: document.querySelector('#hd')
+    },
+    mx = my = angle = x = y = dist = grd = 0;
+    canvas.height = canvas.width = w = h = 400;
+    canvas.addEventListener('mousemove', function(ev) {
+      x = ev.pageX - this.offsetLeft; 
+      y = ev.pageY - this.offsetTop;
+      canvas.width = 400;
+      
+      cx.beginPath();
+      cx.moveTo(200, 200);
+      cx.strokeStyle = 'red';
+      cx.lineTo(x, y);
+      cx.stroke();
+      cx.closePath();
+
+      cx.beginPath();
+      cx.strokeStyle = 'blue';
+      cx.moveTo(x, y);
+      cx.lineTo(x, 200);
+      cx.stroke();
+      cx.closePath();
+
+      cx.beginPath();
+      cx.strokeStyle = 'green';
+      cx.moveTo(x, 200);
+      cx.lineTo(200, 200);
+      cx.stroke();
+      cx.closePath();
+      
+      cx.beginPath();
+      grd = cx.createRadialGradient(x,y,3,x,y,10);
+      grd.addColorStop(0, "white");
+      grd.addColorStop(1, "orange");
+      cx.fillStyle = grd;  
+      cx.arc( x, y, 10 , 0, Math.PI*2, true );
+      cx.fill();      
+      cx.closePath();
+
+      cx.beginPath();
+      grd = cx.createRadialGradient(200,200,3,200,200,10);
+      grd.addColorStop(0, "white");
+      grd.addColorStop(1, "red");
+      cx.fillStyle = grd;  
+      cx.arc( 200, 200, 10 , 0, Math.PI*2, true );
+      cx.fill();      
+      cx.closePath();
+      
+      
+      mx = x - 200;
+      my = y - 200;
+      dist = Math.sqrt(mx * mx + my * my);
+      angle = Math.atan2( my, mx ) * 180 / Math.PI;
+      output.horizontal.innerHTML = Math.abs(mx);
+      output.vertical.innerHTML = Math.abs(my);
+      output.length.innerHTML = ((dist*100)>>0)/100;
+      output.angle.innerHTML = ((angle*100)>>0)/100;
+
+    }, false);
+
+</script>
+<script>
+var code = document.querySelector('script').innerHTML;
+code = code.replace(/</g,'&lt');
+code = code.replace(/>/g,'&gt');
+document.querySelector('.source').innerHTML = code;
+</script>
+
+</body>
+</html>

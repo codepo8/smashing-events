@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Speed, distance and angle</title>
+  <meta type="description" content="">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700|Open+Sans+Condensed:700,300' rel='stylesheet' type='text/css'>
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" media="all" href="less.css"/>
+  <link rel="stylesheet" media="all" href="style.css"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <style type="text/css" media="screen">
+  .plot {
+    position: absolute;
+    top: 50px;
+    left: 200px;
+    background:rgb(175,50,50);
+    width: 20px;
+    height: 20px;
+    border-radius: 20px;
+    display: block;
+  }
+  ::selection 	 	{background: transparent;}
+  ::-moz-selection 	{background: transparent;}
+  
+  </style>
+</head>
+<body>
+  <header><h1 class="large">Speed, distance and angle</h1></header>
+  <section>
+    <p>Press your mouse down, keep it pressed and move the ball on the screen.</p>
+    <div class="plot"></div>
+  </section>
+  <output></output>
+  <output class="source"></output>
+  <footer>
+    <nav><ul><li><a href="index.html">Start</a></li><li><a href="windowevents.html" id="" title="windowevents">Events</a></li>
+    <li><a href="eventproperties.html">Event Properties</a></li>
+    <li><a href="preventdefault.html">Prevent default</a></li>
+    <li><a href="mouseposition.html">Mouse position</a></li>
+    <li><a href="transitionevent.html">Transitions</a></li>
+    <li><strong>Speed, Distance and Angle</strong></li></ul></nav>
+  <p class="small">Written by 
+    <a href="http://christianheilmann.com/">Chris Heilmann</a> 
+    (<a href="http://twitter.com/codepo8">@codepo8</a>)
+  </p>
+</footer>
+<script>
+var plot = document.querySelector('.plot'),
+    log = document.querySelector('output'),
+    offset = plot.offsetWidth / 2,
+    pressed = false,
+    start = x = y = end = ex = ey = mx = my = duration = dist = angle = 0;
+
+document.addEventListener('mousedown', onmousedown, false);
+document.addEventListener('mouseup', onmouseup, false);
+document.addEventListener('mousemove', onmousemove, false);
+
+function onmousedown(ev) {
+  if (start === 0 && x === 0 && y === 0) {
+    start = ev.timeStamp;
+    x = ev.clientX;
+    y = ev.clientY;
+    moveplot(x, y);
+    pressed = true;
+  }
+}
+function onmouseup(ev) {
+  end = ev.timeStamp;
+  duration = end - start;
+  ex = ev.clientX;
+  ey = ev.clientY;
+  mx = ex - x;
+  my = ey - y;
+  dist = Math.sqrt(mx * mx + my * my);
+  start = x = y = 0;
+  pressed = false;
+  angle = Math.atan2( my, mx ) * 180 / Math.PI;
+  log.innerHTML = '<strong>' + (dist>>0) +'</strong> pixels in <strong>'+
+                  duration +'</strong> ms ( <strong>' +
+                  twofloat(dist/duration) +'</strong> pixels/ms)'+
+                  ' at <strong>' + twofloat(angle) +
+                  '</strong> degrees';
+}
+function onmousemove (ev) {
+  if (pressed) {
+    moveplot (ev.pageX, ev.pageY);
+  }
+}
+function twofloat(val) {
+  return Math.round((val*100))/100;
+}
+function moveplot(x, y) {
+  plot.style.left = (x - offset) + 'px';
+  plot.style.top = (y - offset) + 'px';
+}
+</script>
+<script>
+var code = document.querySelector('script').innerHTML;
+code = code.replace(/</g,'&lt');
+code = code.replace(/>/g,'&gt');
+document.querySelector('.source').innerHTML = code;
+</script>
+</body>
+</html>

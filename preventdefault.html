@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Prevent default demo</title>
+  <meta type="description" content="">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700|Open+Sans+Condensed:700,300' rel='stylesheet' type='text/css'>
+	<!--[if lt IE 9]>
+		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link rel="stylesheet" media="all" href="less.css"/>
+	<link rel="stylesheet" media="all" href="style.css"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+	<!-- Adding "maximum-scale=1" fixes the Mobile Safari auto-zoom bug: http://filamentgroup.com/examples/iosScaleBug/ -->
+</style>
+</head>
+<body>
+  <header><h1 class="large">Prevent default demo</h1></header>
+  <section>
+    <div class="demo">
+    <p>With prevent default: 
+    <a class="prevent" href="http://smashingmagazine.com">Smashing, my dear!</a></p>
+    <p>Without prevent default:
+    <a class="normal" href="http://smashingmagazine.com">Smashing, my dear!</a></p>
+    </div>
+  </section>
+  <output class="source"></output>
+  <footer>
+    <nav><ul><li><a href="index.html">Start</a></li><li><a href="windowevents.html">Events</a></li>
+    <li><a href="eventproperties.html">Event Properties</a></li>
+    <li><strong>Prevent default</strong></li>
+    <li><a href="mouseposition.html">Mouse position</a></li>
+    <li><a href="transitionevent.html">Transitions</a></li>
+    <li><a href="speeddistanceangle.html">Speed, Distance and Angle</a></li></ul></nav>
+  <p class="small">Written by 
+    <a href="http://christianheilmann.com/">Chris Heilmann</a> 
+    (<a href="http://twitter.com/codepo8">@codepo8</a>)
+  </p>
+</footer>
+<script>
+var normal = document.querySelector('.normal'),
+    prevent = document.querySelector('.prevent');
+
+prevent.addEventListener('click', function(ev) {
+  alert('fabulous, really!');
+  ev.preventDefault();
+}, false);
+
+normal.addEventListener('click', function(ev) {
+  alert('fabulous, really!');
+}, false);
+</script>
+<script>
+  document.querySelector('.source').innerHTML = document.querySelector('script').innerHTML;
+  
+</script>
+</body>
+</html>

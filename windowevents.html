@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Window events</title>
+  <meta type="description" content="">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700|Open+Sans+Condensed:700,300' rel='stylesheet' type='text/css'>
+	<!--[if lt IE 9]>
+		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link rel="stylesheet" media="all" href="less.css"/>
+	<link rel="stylesheet" media="all" href="style.css"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+</style>
+</head>
+<body>
+  <header><h1 class="large">Events detected in your browser</h1></header>
+  <section>
+    <output id="log"></output>
+    <output class="source"></output>
+  </section>
+  <footer>
+    <nav><ul><li><a href="index.html">Start</a></li><li><strong>Events</strong></li>
+    <li><a href="eventproperties.html">Event Properties</a></li>
+    <li><a href="preventdefault.html">Prevent default</a></li>
+    <li><a href="mouseposition.html">Mouse position</a></li>
+    <li><a href="transitionevent.html">Transitions</a></li>
+    <li><a href="speeddistanceangle.html">Speed, Distance and Angle</a></li></ul></nav>
+  <p class="small">Written by 
+    <a href="http://christianheilmann.com/">Chris Heilmann</a> 
+    (<a href="http://twitter.com/codepo8">@codepo8</a>)
+  </p>
+</footer>
+<script>
+var log = document.getElementById('log'),
+    i = null, 
+    out = [];
+for (var i in window) {
+  if ( /^on/.test(i) ) { out[out.length] = i; }
+}
+log.innerHTML = out.join(', ');
+</script>
+
+<script>
+var code = document.querySelector('script').innerHTML;
+code = code.replace(/</g,'&lt');
+code = code.replace(/>/g,'&gt');
+document.querySelector('.source').innerHTML = code;
+</script>
+</body>
+</html>

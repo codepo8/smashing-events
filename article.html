@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Back to basics - events and responding to the user</title>
+  <meta type="description" content="">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700|Open+Sans+Condensed:700,300' rel='stylesheet' type='text/css'>
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" media="all" href="less.css"/>
+  <link rel="stylesheet" media="all" href="style.css"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+</style>
+</head>
+<body>
+  <header><h1 class="large">Back to basics - events and responding to the user</h1></header>
+  <section>
+
+
+<p>Whenever people ask me what the most powerful things in JavaScript are I say events, scope and closures. The reason is that events in browsers are bafflingly useful. Today I want to go back to basics of events and get you into the mood to start playing with them beyond the application of click handlers on everything, breaking the web with <code>&lt;a href="javascript:void(0)"&gt;</code> links or messing up our HTML with onclick="foo()" inline handlers (I explained in detail <a href="http://www.onlinetools.org/articles/unobtrusivejavascript/chapter4.html">why these are bad ideas in 2005</a>).</p>
+
+<p><strong>Disclaimer</strong>: the event syntax we'll be using here is the <a href="https://developer.mozilla.org/en/DOM/element.addEventListener">addEventListener()</a> as defined in the <a href="http://dev.w3.org/2006/webapi/DOM-Level-3-Events/html/DOM3-Events.html#events-EventTarget-addEventListener">DOM Level 3 Events specification</a> which works in all the browsers in use now with exception of Internet Explorer older than version 9. A lot of the things we show can be achieved with jQuery though which also supports legacy browsers. Come to think of it, one simple addEventListener() on <code>DOMContentLoaded</code> is a great way of making sure your script is not executed in browsers that would choke on what you are trying to achieve. Maybe it is time not to pester IE6 with a lot of code - it deserves to have a quiet time considering its age.</p>
+
+<p>Before we go into the details, check out a few demos using scroll events in a clever way to achieve pretty sweet results:</p>
+
+<ul><li>Wealthfront Engineering are using <a href="https://www.wealthfront.com/designerwanted">scrolling and shifting content along the z-Axis to find a designer</a>. This was also a big thing used in the <a href="http://2011.beercamp.com/">2011 beercamp web site</a>. Wealthfront also <a href="http://eng.wealthfront.com/2012/03/scrolling-z-axis-with-css-3d-transforms.html">blogged in detail how that is done.</a></li><li><a href="http://lab.hakim.se/scroll-effects/">stroll.js</a> takes a slightly similar approach and shows how lovely transitions can look when you scroll a list</li><li><a href="http://joelb.me/scrollpath/">Scrollpath</a> is a jQuery plugin to move content along a path when you scroll the page</li></ul>
+
+<p>All of this is based on event handling and reading out what the browser gives us. And now let's take a look at repeating the basics of that.</p>
+
+<h2>Basics: What is an event?</h2>
+
+<p>An event is a notification when something happens. This could be a user interaction, new data arriving from a different window or a service, or something happening in the browser. It is incredible how many things browsers tell us these days - a simple loop over the window object and testing if the property starts with "on" <a href="http://thewebrocks.com/demos/smashing-events/windowevents.html">shows us a lot of them</a>.</p>
+
+<pre>var log = document.getElementById('log'),
+    i = null, 
+    out = [];
+for (var i in window) {
+  if ( /^on/.test(i)) { out[out.length] = i; }
+}
+log.innerHTML = out.join(', ');</pre>
+
+<p>In my case, running Firefox, I get this:</p>
+
+<p>onmouseenter, onmouseleave, onafterprint, onbeforeprint, onbeforeunload, onhashchange, onmessage, onoffline, ononline, onpopstate, onpagehide, onpageshow, onresize, onunload, ondevicemotion, ondeviceorientation, onabort, onblur, oncanplay, oncanplaythrough, onchange, onclick, oncontextmenu, ondblclick, ondrag, ondragend, ondragenter, ondragleave, ondragover, ondragstart, ondrop, ondurationchange, onemptied, onended, onerror, onfocus, oninput, oninvalid, onkeydown, onkeypress, onkeyup, onload, onloadeddata, onloadedmetadata, onloadstart, onmousedown, onmousemove, onmouseout, onmouseover, onmouseup, onmozfullscreenchange, onmozfullscreenerror, onpause, onplay, onplaying, onprogress, onratechange, onreset, onscroll, onseeked, onseeking, onselect, onshow, onstalled, onsubmit, onsuspend, ontimeupdate, onvolumechange, onwaiting, oncopy, oncut, onpaste, onbeforescriptexecute, onafterscriptexecute</p>
+
+<p>That is a lot to play with and the way to do that is using <code>addEventListener()</code>:</p>
+
+<pre>element.addEventListener(event, handler, useCapture);</pre>
+
+<p>for example:</p>
+
+<pre>var a = document.querySelector('a'); // grab the first link in the document
+a.addEventListener('click', ajaxloader, false);
+</pre>
+
+<p>The element is the element we apply the handler to, as in "hey you link, make sure you tell me when something happens to you". The <code>ajaxloader()</code> function is the event listener as in "hey you, just stand there and keep your ears and eyes peeled in case something happens to the link". The <code>useCapture</code> set to <code>false</code> means that we are happy to capture the event on bubbling rather than the capturing phase. This is a <a href="http://www.w3.org/TR/DOM-Level-3-Events/#event-flow">long and arduous topic</a>, <a href="http://dev.opera.com/articles/view/event-capture-explained/">very well explained here</a> - let's just say you set the <code>useCapture</code> to false and you will be fine in 99.7434% of the cases (rough approximation). The parameter is actually optional in all browsers but Opera.</p>
+
+<p>Now, the event handler function gets an object as a parameter from the event which is full of awesome properties we can play with. If you <a href="http://thewebrocks.com/demos/smashing-events/eventproperties.html">try out this example</a> you see what the following code does:</p>
+
+<pre>var log = document.getElementById('log'),
+    i = 0,
+    out = '';
+    
+document.addEventListener('click', logeventinfo, false);
+document.addEventListener('keypress', logeventinfo, false);
+
+function logeventinfo (ev) {
+  log.innerHTML = '';
+  out = '&lt;ul&gt;';
+  for (var i in ev) {
+    if (typeof ev[i] === 'function' || i === i.toUpperCase()) {
+      continue;
+    }
+    out += '&lt;li&gt;&lt;span&gt;'+i+'&lt;/span&gt;: '+ev[i]+'&lt;/li&gt;';
+  }
+  log.innerHTML += out + '&lt;/ul&gt;';
+}
+</pre>
+
+<p>You can assign several event handlers to the same event or the same handler to various events (as shown in this demo). </p>
+
+<p>The <code>ev</code> is what we get back from the event, and (again in my case in Firefox) has a lot of interesting things in it:</p> 
+
+<pre>originalTarget: [object HTMLHtmlElement]
+type: click
+target: [object HTMLHtmlElement]
+currentTarget: [object HTMLDocument]
+eventPhase: 3
+bubbles: true
+cancelable: true
+timeStamp: 574553210
+defaultPrevented: false
+which: 1
+rangeParent: [object Text]
+rangeOffset: 23
+pageX: 182
+pageY: 111
+isChar: false
+screenX: 1016
+screenY: 572
+clientX: 182
+clientY: 111
+ctrlKey: false
+shiftKey: false
+altKey: false
+metaKey: false
+button: 0
+relatedTarget: null
+mozPressure: 0
+mozInputSource: 1
+view: [object Window]
+detail: 1
+layerX: 182
+layerY: 111
+cancelBubble: false
+explicitOriginalTarget: [object HTMLHtmlElement]
+isTrusted: true
+originalTarget: [object HTMLHeadingElement]
+type: click
+target: [object HTMLHeadingElement]
+currentTarget: [object HTMLDocument]
+eventPhase: 3
+bubbles: true
+cancelable: true
+timeStamp: 574554192
+defaultPrevented: false
+which: 1
+rangeParent: [object Text]
+rangeOffset: 0
+pageX: 1
+pageY: 18
+isChar: false
+screenX: 835
+screenY: 479
+clientX: 1
+clientY: 18
+ctrlKey: false
+shiftKey: false
+altKey: false
+metaKey: false
+button: 0
+relatedTarget: null
+mozPressure: 0
+mozInputSource: 1
+view: [object Window]
+detail: 1
+layerX: 1
+layerY: 18
+cancelBubble: false
+explicitOriginalTarget: [object Text]
+isTrusted: true</pre>
+
+<p>It also differs from event to event - try clicking the demo and pressing keys and you will see that you get different results.</p>
+
+<h2>The last of the basics: preventing execution and getting the target</h2>
+
+<p>Two more things are important when it comes to events in the browser: stop an event from happening and how to find out what the element was that has been activated. The former is achieved with the <code>ev.preventDefault()</code> method and the latter is stored in <code>ev.target</code>.</p>
+
+<p>Say for example you want to know that a link was clicked, but you don't want the browser to follow it as you have an great plan what to do with that event instead. You can do that by subscribing to the click event of the link and stop the browser from following it by calling <code>preventDefault()</code>:</p> 
+
+<pre>
+HTML:
+&lt;a class="prevent" href="http://smashingmagazine.com"&gt;Smashing, my dear!&lt;/a&gt;
+&lt;a class="normal" href="http://smashingmagazine.com"&gt;Smashing, my dear!&lt;/a&gt;
+</pre>
+
+<pre>var normal = document.querySelector('.normal'),
+    prevent = document.querySelector('.prevent');
+
+prevent.addEventListener('click', function(ev) {
+  alert('fabulous, really!');
+  ev.preventDefault();
+}, false);
+
+normal.addEventListener('click', function(ev) {
+  alert('fabulous, really!');
+}, false);
+</pre>
+
+<p>If you now click the link, you get an alert and when you hit the ok button nothing more happens - the browser does not go to http://smashingmagazine.com. Without the <code>preventDefault()</code> the browser shows the alert and follows the link. <a href="http://thewebrocks.com/demos/smashing-events/preventdefault.html">Try it out here</a>. </p>
+
+<p>The normal way to access the element that was clicked, hovered over or had a key pressed is using the <code>this</code> keyword in the handler. This is short and sweet, but actually limiting as <code>addEventListener()</code> gives us something better - the event target.</p> 
+
+<h2>Event delegation - this rocks, use it!</h2>
+
+<p>Using the <code>target</code> property of the event object you can find out which element was the one the event occurred on.</p>
+
+<p>Events happen by going down the whole document tree to the element you interacted with and back up to the main window. This means that if you add an event handler to an element you get all the child elements for free. All you need to do is test the event target and react accordingly. See <a href="http://thewebrocks.com/demos/smashing-events/eventdelegation.html">this example of a list</a>: </p>
+
+<pre>&lt;ul id=&quot;resources&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;http://developer.mozilla.org&quot;&gt;MDN&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://html5doctor.com&quot;&gt;HTML5 Doctor&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://html5rocks.com&quot;&gt;HTML5 Rocks&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://beta.theexpressiveweb.com/&quot;&gt;Expressive Web&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://creativeJS.com/&quot;&gt;CreativeJS&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</pre>
+
+<p>Hover your mouse over the list in this example and you will see that one event handler is enough to get the links, the list item and the list itself. All you need to do is to compare the <code>tagName</code> of the event target to what you want to have.</p>
+
+<pre>
+var resources = document.querySelector('#resources'),
+    log = document.querySelector('#log');
+
+resources.addEventListener('mouseover', showtarget, false);
+
+function showtarget(ev) {
+  var target = ev.target;
+  if (target.tagName === 'A') {
+    log.innerHTML = 'A link, with the href:' + target.href;
+  }
+  if (target.tagName === 'LI') {
+    log.innerHTML = 'A list item';
+  }
+  if (target.tagName === 'UL') {
+    log.innerHTML = 'The list itself';
+  }
+}
+</pre>
+
+<p>This means you can save a lot of event handling - each of which is expensive to the browser. Instead of applying an event handler on each link and react that way (like most people would do in jQuery with a <code>$('a').click(...)</code>) you can assign a single event handler on the list itself and check which element was currently clicked.</p>
+
+<p>The main benefit of this is that you are independent of the HTML - if you add more links at a later stage there is no need to assign new handlers - the event handler realised automatically that there is a new link to do things with.</p>
+
+<h2>Events for detection, CSS transitions for smoothness</h2>
+
+<p>If you remember the list of properties earlier in this article, there is a lot of things we can use. In the past we used events for simple hover effects which by now have been replaced with effects using the  <code>:hover</code> and <code>:focus</code> CSS selectors. Some things, however, can not be done with CSS yet - for example finding the mouse position. As an event listener, this is pretty simple. First we define an element to position, like a ball:</p>
+
+<pre>
+HTML:
+&lt;div class="plot"&gt;&lt;/div&gt;
+CSS:
+.plot {
+  position:absolute;
+  background:rgb(175,50,50);
+  width: 20px;
+  height: 20px;
+  border-radius: 20px;
+  display: block;
+  top:0;
+  left:0;
+}
+</pre> 
+
+<p>We then assign a click handler to the document and position the ball at <code><a href="https://developer.mozilla.org/en/DOM/event.clientX">clientX</a></code> and <code>clientY</code>. Notice we need to subtract half the width of the ball in order to centre it around the mouse pointer:</p>
+
+<pre>var plot = document.querySelector('.plot'),
+    offset = plot.offsetWidth / 2;
+document.addEventListener('click', function(ev) {
+  plot.style.left = (ev.clientX - offset) + 'px';
+  plot.style.top = (ev.clientY - offset) + 'px';
+}, false);</pre>
+
+<p>Clicking anywhere on the screen will now move the ball there. However, this is not smooth. If you <a href="http://thewebrocks.com/demos/smashing-events/mouseposition.html">enable the checkbox in the demo</a> you see that the ball moves smoothly. We could animate this with a library but browsers can do better these days. All we need to do is add a transition to the CSS and the browser will move the ball smoothly from one position to another. To achieve this, we define a new class called smooth and apply it to the plot when the checkbox in the document is clicked:</p>
+
+<pre>
+CSS:
+
+.smooth {
+  -webkit-transition: 0.5s;
+     -moz-transition: 0.5s;
+      -ms-transition: 0.5s;
+       -o-transition: 0.5s;
+          transition: 0.5s;
+}
+
+JavaScript:
+
+var cb = document.querySelector('input[type=checkbox]');
+cb.addEventListener('click', function(ev) {
+  plot.classList.toggle('smooth');
+}, false);
+</pre>
+
+<p>The interplay of CSS and JavaScript events was always very powerful but got even better in newer browsers. As you might have guessed, CSS transitions and animations have their own events.</p>
+
+<h2>Working with CSS transitions (and animations)</h2>
+
+<p><a href="https://developer.mozilla.org/en/CSS/CSS_transitions">CSS transitions</a> fire a single event you can listen for in JavaScript called <code>transitionend</code>. The event object then has two properties: <code>propertyName</code> which contains the property that was transitioned and <code>elapsedTime</code> telling you how long it took. </p>
+
+<p>Check out <a href="http://thewebrocks.com/demos/smashing-events/transitionevent.html">this demo</a> to see this in action. The code should be simple enough:</p>
+
+<pre>
+CSS:
+.plot {
+  background:rgb(175,50,50);
+  width: 20px;
+  height: 20px;
+  border-radius: 20px;
+  display: block;
+  -webkit-transition: 0.5s;
+     -moz-transition: 0.5s;
+      -ms-transition: 0.5s;
+       -o-transition: 0.5s;
+          transition: 0.5s;
+}
+.plot:hover {
+  width: 50px;
+  height: 50px;
+  border-radius: 100px;
+  background: blue;
+}
+JavaScript:
+plot.addEventListener('transitionend', function(ev) {
+  log.innerHTML += ev.propertyName + ':' + ev.elapsedTime + 's ';
+}, false);
+</pre>
+
+<p>This, however, will only work in Firefox right now as Chrome, Safari and Opera have vendor-prefixed events instead. As shown in <a href="https://gist.github.com/702826">this Gist by David Calhoun</a> you need to detect what the browser supports and define the event name that way.</p>
+
+<p><a href="https://developer.mozilla.org/en/CSS/CSS_animations">CSS animation events</a> work the same way, but you have three events instead of one: <code>animationstart</code>, <code>animationend</code> and <code>animationiteration</code>. You can see a demo of that <a href="https://developer.mozilla.org/samples/cssref/animations/animevents.html">on the MDN page</a>.</p>
+
+<h2>Speed, distance and angle</h2>
+
+Detecting events happening is one thing. If you want to do something with them that is a beautiful and engaging then you need to go further and put some math into it. So let's have a go at how to use a few mouse handlers to calculate the angle, the distance and the speed of movement when a user drags an element across the screen. You can <a href="http://thewebrocks.com/demos/smashing-events/speeddistanceangle.html">see it working here</a>.
+
+<pre>var plot = document.querySelector('.plot'),
+    log = document.querySelector('output'),
+    offset = plot.offsetWidth / 2,
+    pressed = false,
+    start = x = y = end = ex = ey = mx = my = duration = dist = angle = 0;
+
+document.addEventListener('mousedown', onmousedown, false);
+document.addEventListener('mouseup', onmouseup, false);
+document.addEventListener('mousemove', onmousemove, false);
+
+function onmousedown(ev) {
+  if (start === 0 &amp;&amp; x === 0 &amp;&amp; y === 0) {
+    start = ev.timeStamp;
+    x = ev.clientX;
+    y = ev.clientY;
+    moveplot(x, y);
+    pressed = true;
+  }
+}
+function onmouseup(ev) {
+  end = ev.timeStamp;
+  duration = end - start;
+  ex = ev.clientX;
+  ey = ev.clientY;
+  mx = ex - x;
+  my = ey - y;
+  dist = Math.sqrt(mx * mx + my * my);
+  start = x = y = 0;
+  pressed = false;
+  angle = Math.atan2( my, mx ) * 180 / Math.PI;
+  log.innerHTML = '&lt;strong&gt;' + (dist&gt;&gt;0) +'&lt;/strong&gt; pixels in &lt;strong&gt;'+
+                  duration +'&lt;/strong&gt; ms ( &lt;strong&gt;' +
+                  twofloat(dist/duration) +'&lt;/strong&gt; pixels/ms)'+
+                  ' at &lt;strong&gt;' + twofloat(angle) +
+                  '&lt;/strong&gt; degrees';
+}
+function onmousemove (ev) {
+  if (pressed) {
+    moveplot(ev.pageX, ev.pageY);
+  }
+}
+function twofloat(val) {
+  return Math.round((val*100))/100;
+}
+function moveplot(x, y) {
+  plot.style.left = (x - offset) + 'px';
+  plot.style.top = (y - offset) + 'px';
+}</pre>
+
+<p>OK, I admit, there is quite a lot going on here. But it is not as hard as it looks. Both <code>onmousedown</code> and <code>onmouseup</code> we read the mouse position with <code>clientX</code> and <code>clientY</code> and the <code>timeStamp</code> of the event. Mouse events have time stamps telling you when they happened. When the mouse moves all we check is that the mouse button is pressed (a Boolean set in the mouse down handler) and move the plot with the mouse.</p>
+
+<p>The rest is Math/Geometry, to be precise good old <a href="http://en.wikipedia.org/wiki/Pythagorean_theorem">Pythagoras</a>. We get the speed of the movement by checking the number of pixels traveled in the time difference between mouse down and mouse up.</p>
+
+<p>We get the amount of pixels traveled as the square root of the sum of the squares of the difference in x and y of the start and the end of the movement. And we get the angle by calculating the arctangent of the triangle. All of which was covered in "<a href="http://coding.smashingmagazine.com/2011/10/04/quick-look-math-animations-javascript/">A Quick Look Into The Math Of Animations With JavaScript</a>". Or you can play with the following JSFiddle example:</p>
+
+<iframe style="width: 100%; height: 400px" src="http://jsfiddle.net/codepo8/bAwUf/embedded/result,js,html,css" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
+<h2>Media events</h2>
+
+<p>Both Video and Audio fire lots of events we can tap into. The most interesting are the time events telling you how far the song or the movie has been played.
+A nice little demo to look at is the <a href="http://hacks.mozilla.org/2012/03/making-the-dino-roar-syncing-audio-and-css-transitions/">MDN MGM dinosaur animation</a> and I recorded a <a href="www.youtube.com/watch?v=aFIJ_ZpV-8Q">6 minute screencast</a> explaining how that one is done.</p>
+<p>If you want to see a demo of all the events in action, the JPlayer team has a great <a href="http://www.jplayer.org/HTML5.Media.Event.Inspector/">demo page showing media events</a>.</p>
+
+<h2>Input options</h2>
+
+<p>Traditionally browsers gave us mouse and keyboard interaction. Nowadays this is not enough as we use hardware that offers more to us. <a href="https://developer.mozilla.org/en/DOM/DeviceOrientationEvent">Device orientation</a> for example allows you to react to tilting a phone or tablet,  <a href="https://developer.mozilla.org/en/DOM/Touch_events">touch events</a> are a big thing on mobiles and tablets, <a href="http://hacks.mozilla.org/2011/12/paving-the-way-for-open-games-on-the-web-with-the-gamepad-and-mouse-lock-apis/">the Gamepad API</a> allows us to read out game controllers in browsers, <a href="https://developer.mozilla.org/en/DOM/window.postMessage">postMessage</a> allows us to send messages across domains and browser windows, <a href="https://developer.mozilla.org/en/DOM/Using_the_Page_Visibility_API">pageVisibility</a> allows us to react to users switching to another tab. We can even detect <a href="https://developer.mozilla.org/en/DOM/window.onpopstate">when the history object of the window is manipulated</a>. Check the list of events in the window object to find some more gems that might not be quite ready but should be available soon for us to dig into.</p> 
+
+<p>Whatever will come next in browser support - you can be sure that there will be events fired and you will be able to listen to them. The method works and actually rocks. </p>
+
+<h2>Go out and play</h2>
+
+<p>And that is it - events are not hard, in most cases you just need to subscribe to them and check what comes back as the event object to see what you can do with it. Of course there is a lot of browser hacking still needed at times, but I for one find it incredible in just how many different ways we can interact with our users and see what they are doing. If you want to get really creative with this, stop thinking in the use cases we have now and go down into the nitty gritty of what distances, angles, speed and input can mean to an interface. If you think about it - playing Angry Birds to the largest degree means detecting the start and end of a touch event and detect the power and direction the bird should take off in. So what is stopping you from creating something very interactive and cool?</p>
+
+</section>
+
+</body>
+</html>
