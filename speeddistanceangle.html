@@ -36,12 +36,13 @@
   </section>
   <output></output>
 
-<script>
+<script> 
 var plot = document.querySelector('.plot'),
     log = document.querySelector('output'),
     offset = plot.offsetWidth / 2,
     pressed = false,
-    start = x = y = end = ex = ey = mx = my = duration = dist = angle = 0;
+    start = 0, x = 0, y = 0, end = 0, ex = 0, ey = 0, mx = 0, my = 0, 
+    duration = 0, dist = 0, angle = 0;
 
 document.addEventListener('mousedown', onmousedown, false);
 document.addEventListener('mouseup', onmouseup, false);
