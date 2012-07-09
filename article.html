@@ -19,11 +19,11 @@
   <section>
 
 
-<p>Whenever people ask me what the most powerful things in JavaScript are I say events, scope and closures. The reason is that events in browsers are bafflingly useful. Today I want to go back to basics of events and get you into the mood to start playing with them beyond the application of click handlers on everything, breaking the web with <code>&lt;a href="javascript:void(0)"&gt;</code> links or messing up our HTML with onclick="foo()" inline handlers (I explained in detail <a href="http://www.onlinetools.org/articles/unobtrusivejavascript/chapter4.html">why these are bad ideas in 2005</a>).</p>
+<p>Whenever people ask me about the most powerful things in JavaScript and the DOM I very quickly arrive at events. The reason is that events in browsers are bafflingly useful. Furthermore decoupling functionality with events is a very powerful idea which is why <a href="http://nodejs.org/">Node.js</a> became such a hot topic. Today I want to go back to basics of events and get you into the mood to start playing with them beyond the application of click handlers on everything, breaking the web with <code>&lt;a href="javascript:void(0)"&gt;</code> links or messing up our HTML with onclick="foo()" inline handlers (I explained in detail <a href="http://www.onlinetools.org/articles/unobtrusivejavascript/chapter4.html">why these are bad ideas in 2005</a>).</p>
 
-<p><strong>Disclaimer</strong>: the event syntax we'll be using here is the <a href="https://developer.mozilla.org/en/DOM/element.addEventListener">addEventListener()</a> as defined in the <a href="http://dev.w3.org/2006/webapi/DOM-Level-3-Events/html/DOM3-Events.html#events-EventTarget-addEventListener">DOM Level 3 Events specification</a> which works in all the browsers in use now with exception of Internet Explorer older than version 9. A lot of the things we show can be achieved with jQuery though which also supports legacy browsers. Come to think of it, one simple addEventListener() on <code>DOMContentLoaded</code> is a great way of making sure your script is not executed in browsers that would choke on what you are trying to achieve. Maybe it is time not to pester IE6 with a lot of code - it deserves to have a quiet time considering its age.</p>
+<p><strong>Disclaimer</strong>: the event syntax we'll be using here is the <a href="https://developer.mozilla.org/en/DOM/element.addEventListener">addEventListener()</a> as defined in the <a href="http://dev.w3.org/2006/webapi/DOM-Level-3-Events/html/DOM3-Events.html#events-EventTarget-addEventListener">DOM Level 3 Events specification</a> which works in all the browsers in use now with exception of Internet Explorer older than version 9. A lot of the things we show can be achieved with jQuery though which also supports legacy browsers. Come to think of it, one simple addEventListener() on <code>DOMContentLoaded</code> is a great way of making sure your script is not executed in browsers that would choke on what you are trying to achieve. Maybe it is time not to pester IE6, 7 and 8 with a lot of code - they deserve to have a quiet time considering their age.</p>
 
-<p>Before we go into the details, check out a few demos using scroll events in a clever way to achieve pretty sweet results:</p>
+<p>Before we go into the details of events and how to use them, check out a few demos using scroll events in a clever way to achieve pretty sweet results:</p>
 
 <ul><li>Wealthfront Engineering are using <a href="https://www.wealthfront.com/designerwanted">scrolling and shifting content along the z-Axis to find a designer</a>. This was also a big thing used in the <a href="http://2011.beercamp.com/">2011 beercamp web site</a>. Wealthfront also <a href="http://eng.wealthfront.com/2012/03/scrolling-z-axis-with-css-3d-transforms.html">blogged in detail how that is done.</a></li><li><a href="http://lab.hakim.se/scroll-effects/">stroll.js</a> takes a slightly similar approach and shows how lovely transitions can look when you scroll a list</li><li><a href="http://joelb.me/scrollpath/">Scrollpath</a> is a jQuery plugin to move content along a path when you scroll the page</li></ul>
 
@@ -152,7 +152,7 @@ cancelBubble: false
 explicitOriginalTarget: [object Text]
 isTrusted: true</pre>
 
-<p>It also differs from event to event - try clicking the demo and pressing keys and you will see that you get different results.</p>
+<p>It also differs from event to event - try clicking the demo and pressing keys and you will see that you get different results. You can also see the <a href="https://developer.mozilla.org/en/DOM/event#Properties">full list of standard event properties</a> as a reference.</p>
 
 <h2>The last of the basics: preventing execution and getting the target</h2>
 
@@ -181,7 +181,7 @@ normal.addEventListener('click', function(ev) {
 
 <p>If you now click the link, you get an alert and when you hit the ok button nothing more happens - the browser does not go to http://smashingmagazine.com. Without the <code>preventDefault()</code> the browser shows the alert and follows the link. <a href="http://thewebrocks.com/demos/smashing-events/preventdefault.html">Try it out here</a>. </p>
 
-<p>The normal way to access the element that was clicked, hovered over or had a key pressed is using the <code>this</code> keyword in the handler. This is short and sweet, but actually limiting as <code>addEventListener()</code> gives us something better - the event target.</p> 
+<p>The normal way to access the element that was clicked, hovered over or had a key pressed is using the <code>this</code> keyword in the handler. This is short and sweet, but actually limiting as <code>addEventListener()</code> gives us something better - the event target. It could also be confusing as <code>this</code> might already be bound to something else, so using <code>ev.currentTarget</code> as specified in the spec is a safer bet.</p> 
 
 <h2>Event delegation - this rocks, use it!</h2>
 
@@ -219,7 +219,7 @@ function showtarget(ev) {
 }
 </pre>
 
-<p>This means you can save a lot of event handling - each of which is expensive to the browser. Instead of applying an event handler on each link and react that way (like most people would do in jQuery with a <code>$('a').click(...)</code>) you can assign a single event handler on the list itself and check which element was currently clicked.</p>
+<p>This means you can save a lot of event handling - each of which is expensive to the browser. Instead of applying an event handler on each link and react that way (like most people would do in jQuery with a <code>$('a').click(...)</code> - using jQuery's "on" is OK though) you can assign a single event handler on the list itself and check which element was currently clicked.</p>
 
 <p>The main benefit of this is that you are independent of the HTML - if you add more links at a later stage there is no need to assign new handlers - the event handler realised automatically that there is a new link to do things with.</p>
 
@@ -243,13 +243,13 @@ CSS:
 }
 </pre> 
 
-<p>We then assign a click handler to the document and position the ball at <code><a href="https://developer.mozilla.org/en/DOM/event.clientX">clientX</a></code> and <code>clientY</code>. Notice we need to subtract half the width of the ball in order to centre it around the mouse pointer:</p>
+<p>We then assign a click handler to the document and position the ball at <code><a href="https://developer.mozilla.org/en/DOM/event.pageX">PageX</a></code> and <code>pageY</code>. Notice we need to subtract half the width of the ball in order to centre it around the mouse pointer:</p>
 
 <pre>var plot = document.querySelector('.plot'),
     offset = plot.offsetWidth / 2;
 document.addEventListener('click', function(ev) {
-  plot.style.left = (ev.clientX - offset) + 'px';
-  plot.style.top = (ev.clientY - offset) + 'px';
+  plot.style.left = (ev.pageX - offset) + 'px';
+  plot.style.top = (ev.pageY - offset) + 'px';
 }, false);</pre>
 
 <p>Clicking anywhere on the screen will now move the ball there. However, this is not smooth. If you <a href="http://thewebrocks.com/demos/smashing-events/mouseposition.html">enable the checkbox in the demo</a> you see that the ball moves smoothly. We could animate this with a library but browsers can do better these days. All we need to do is add a transition to the CSS and the browser will move the ball smoothly from one position to another. To achieve this, we define a new class called smooth and apply it to the plot when the checkbox in the document is clicked:</p>
@@ -274,6 +274,39 @@ cb.addEventListener('click', function(ev) {
 </pre>
 
 <p>The interplay of CSS and JavaScript events was always very powerful but got even better in newer browsers. As you might have guessed, CSS transitions and animations have their own events.</p>
+
+<h2>How long was a key pressed?</h2>
+
+<p>As you might have seen in the list of available events earlier, browsers also give us a chance to react to keyboard entry and tell us when a user has pressed a key. Sady enough, proper key handling in a browser is hard to do as <a href="http://unixpapa.com/js/key.html">this article explains in detail</a>. However, as a simple example let's take a look how we could measure how long a user has pressed a button in milliseconds. See <a href="http://thewebrocks.com/demos/smashing-events/keytime.html">this keytime demo</a> as the example. Press a key and you will see the output field growing whilst the key is down. Once you release the key, you get the amount of milliseconds you had it pressed. The code is not hard at all</p>
+
+<pre>
+JavaScript:
+var resources = document.querySelector('#resources'),
+    log = document.querySelector('#log'),
+    time = 0;
+
+document.addEventListener('keydown', keydown, false);
+document.addEventListener('keyup', keyup, false);
+
+function keydown(ev) {
+  if (time === 0) { 
+    time = ev.timeStamp; 
+    log.classList.add('animate');
+  }
+}
+function keyup(ev) {
+  if (time !== 0) {
+    log.innerHTML = ev.timeStamp - time;
+    time = 0;
+    log.classList.remove('animate');
+  }
+}
+</pre>
+
+<p>You define the elements you want and set <code>time</code> to <code>0</code>. We then apply two event handlers to the document, one on <code>keydown</code> and one on <code>keyup</code>.</p>
+<p>In the keydown handler we check it <code>time</code> is <code>0</code> and if it is we set <code>time</code> to the <code>timeStamp</code> of the event. We assign a CSS class to the output element (this starts a CSS animation - see the CSS for how that is done).</p>
+<p>The <code>keyup</code> handler checks if <code>time</code> is still <code>0</code> (as <code>keydown</code> gets fired continuously whilst the key is pressed) and calculate the difference in the time stamps if it isn't. We set <code>time</code> back to <code>0</code> and remove the class to stop the animation.</p>
+<p></p>
 
 <h2>Working with CSS transitions (and animations)</h2>
 
@@ -319,7 +352,8 @@ Detecting events happening is one thing. If you want to do something with them t
     log = document.querySelector('output'),
     offset = plot.offsetWidth / 2,
     pressed = false,
-    start = x = y = end = ex = ey = mx = my = duration = dist = angle = 0;
+    start = 0, x = 0, y = 0, end = 0, ex = 0, ey = 0, mx = 0, my = 0, 
+    duration = 0, dist = 0, angle = 0;
 
 document.addEventListener('mousedown', onmousedown, false);
 document.addEventListener('mouseup', onmouseup, false);

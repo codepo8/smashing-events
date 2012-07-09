@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Keypress time</title>
+  <meta type="description" content="">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700|Open+Sans+Condensed:700,300' rel='stylesheet' type='text/css'>
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" media="all" href="less.css"/>
+  <link rel="stylesheet" media="all" href="style.css"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <style type="text/css" media="screen">
+    #resources {
+      background: #cfc;
+      padding: 20px;
+      margin-left: 0;
+      border-radius: 5px;
+    }
+    #resources li {
+      background: #ccc;
+      margin: 10px 0;
+      padding: 15px;
+      border-radius: 5px;
+    }
+    #resources a {
+      background: #000;
+      padding: 5px 10px;
+      text-shadow: none;
+      color: #fff;
+      border-radius: 5px;
+    }
+    #log.animate {
+
+    }
+  #log.animate {  
+    -webkit-animation: slidein 3s;  
+    -moz-animation: slidein 3s;  
+    -ms-animation: slidein 3s;  
+    -o-animation: slidein 3s;  
+    animation: slidein 3s;  
+  }  
+  
+  @-webkit-keyframes slidein { from { width: 0%; } to { width: 100%; } } 
+  @-moz-keyframes slidein { from { width: 0%; } to { width: 100%; } } 
+  @-ms-keyframes slidein { from { width: 0%; } to { width: 100%; } } 
+  @-o-keyframes slidein { from { width: 0%; } to { width: 100%; } } 
+  @keyframes slidein { from { width: 0%; } to { width: 100%; } } 
+
+  </style>
+</head>
+<body>
+  <header><h1 class="large">Calculating Keypress time</h1></header>
+  <section>
+    <p>Press any key and release it again to see how long it was pressed</p>
+  </section>
+  <output id="log">0</output>
+<script>
+var resources = document.querySelector('#resources'),
+    log = document.querySelector('#log'),
+    time = 0;
+
+document.addEventListener('keydown', keydown, false);
+
+document.addEventListener('keyup', keyup, false);
+
+function keydown(ev) {
+  if (time === 0) { 
+    time = ev.timeStamp; 
+    log.classList.add('animate');
+  }
+}
+function keyup(ev) {
+  if (time !== 0) {
+    log.innerHTML = ev.timeStamp - time;
+    time = 0;
+    log.classList.remove('animate');
+  }
+}
+
+</script>
+
+  <footer>
+  <p class="small">Written by 
+    <a href="http://christianheilmann.com/">Chris Heilmann</a> 
+    (<a href="http://twitter.com/codepo8">@codepo8</a>)
+  </p>
+</footer>
+</body>
+</html>

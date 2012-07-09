@@ -45,8 +45,8 @@ var plot = document.querySelector('.plot'),
     cb = document.querySelector('input[type=checkbox]'),
     offset = plot.offsetWidth / 2;
 document.addEventListener('click', function(ev) {
-  plot.style.left = (ev.clientX - offset) + 'px';
-  plot.style.top = (ev.clientY - offset) + 'px';
+  plot.style.left = (ev.pageX - offset) + 'px';
+  plot.style.top = (ev.pageY - offset) + 'px';
 }, false);
 cb.addEventListener('click', function(ev) {
   plot.classList.toggle('smooth');
